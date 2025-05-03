@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import Fuse from 'fuse.js'
 import { WordCard } from './WordCard'
+import { useDebounce } from '@/hooks/useDebounce'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -28,6 +29,7 @@ export function WordBrowser() {
   const [selectedGroup, setSelectedGroup] = useState<number | null>(null)
   const [selectedWord, setSelectedWord] = useState<Word | null>(null)
   const [search, setSearch] = useState('')
+  const debouncedSearch = useDebounce(search, 300)
 
   const { data: wordGroups, isLoading } = useQuery<Array<WordGroup>>({
     queryKey: ['wordGroups'],
@@ -74,9 +76,9 @@ export function WordBrowser() {
 
   // Fuzzy search logic with highlighting
   const searchResults = useMemo(() => {
-    if (!search.trim()) return []
-    return fuse.search(search.trim())
-  }, [search, fuse])
+    if (!debouncedSearch.trim()) return []
+    return fuse.search(debouncedSearch.trim())
+  }, [debouncedSearch, fuse])
 
   if (isLoading) {
     return <div className="min-h-screen flex items-center justify-center">Loading...</div>
