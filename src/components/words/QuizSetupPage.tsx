@@ -5,12 +5,22 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Checkbox } from '@/components/ui/checkbox'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
+import { QuizPage } from './QuizPage'
 
 const QUIZ_TYPES = [
   { value: 'synonym', label: 'Synonym Matching' },
   { value: 'definition', label: 'Pick the Correct Definition' },
   { value: 'reverse', label: 'Pick the Correct Word for a Definition' },
 ]
+
+function getRandomElements<T>(arr: T[], n: number): T[] {
+  const shuffled = [...arr]
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1))
+    ;[shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]]
+  }
+  return shuffled.slice(0, n)
+}
 
 export function QuizSetupPage() {
   const { data: wordGroups, isLoading } = useQuery({
@@ -35,6 +45,7 @@ export function QuizSetupPage() {
   const [selectedGroups, setSelectedGroups] = useState<number[]>([])
   const [numWordsInput, setNumWordsInput] = useState('')
   const [quizType, setQuizType] = useState(QUIZ_TYPES[0].value)
+  const [quizQuestions, setQuizQuestions] = useState<any[] | null>(null)
 
   // Calculate max words for selected groups
   const maxWords = selectedGroups.length > 0
@@ -75,15 +86,92 @@ export function QuizSetupPage() {
     )
   }
 
+  // Generate quiz questions for all quiz types
+  const generateQuizQuestions = (type: string) => {
+    if (!wordGroups) return []
+    const allWords = wordGroups
+      .filter(g => selectedGroups.includes(g.group))
+      .flatMap(g => g.words)
+    const selectedWords = getRandomElements(allWords, Math.min(parseInt(numWordsInput), allWords.length))
+
+    if (type === 'reverse') {
+      // Pick the correct word for a definition
+      return selectedWords.map(word => {
+        // Pick 3 distractors
+        const distractors = getRandomElements(
+          allWords.filter(w => w.word !== word.word),
+          3
+        ).map(w => w.word)
+        // Use the first definition as the prompt
+        const def = word.definitions[0]
+        return {
+          prompt: def.definition,
+          options: getRandomElements([word.word, ...distractors], 4),
+          correct: word.word,
+          explanation: def.example || ''
+        }
+      })
+    } else if (type === 'definition') {
+      // Pick the correct definition for a word
+      return selectedWords.map(word => {
+        const def = word.definitions[0]
+        // Pick 3 distractor definitions
+        const distractors = getRandomElements(
+          allWords.filter(w => w.word !== word.word && w.definitions.length > 0),
+          3
+        ).map(w => w.definitions[0].definition)
+        return {
+          prompt: word.word,
+          options: getRandomElements([def.definition, ...distractors], 4),
+          correct: def.definition,
+          explanation: def.example || ''
+        }
+      })
+    } else if (type === 'synonym') {
+      // Synonym matching: prompt is a word, options are synonyms (with distractors)
+      return selectedWords.map(word => {
+        // Get all synonyms from all words
+        const allSynonyms = allWords.flatMap(w => w.definitions.flatMap((d: any) => d.synonyms || []))
+        // Get synonyms for this word (from all its definitions)
+        const wordSynonyms = word.definitions.flatMap((d: any) => d.synonyms || [])
+        // If no synonyms, skip this question
+        if (wordSynonyms.length === 0) {
+          return null
+        }
+        // Pick one correct synonym
+        const correctSynonym = getRandomElements(wordSynonyms, 1)[0]
+        // Pick 3 distractors from allSynonyms that are not synonyms of this word
+        const distractors = getRandomElements(
+          allSynonyms.filter(s => !wordSynonyms.includes(s)),
+          3
+        )
+        return {
+          prompt: word.word,
+          options: getRandomElements([correctSynonym, ...distractors], 4),
+          correct: correctSynonym,
+          explanation: word.definitions[0]?.definition || ''
+        }
+      }).filter(Boolean)
+    }
+    return []
+  }
+
   const handleStartQuiz = () => {
     const clamped = clampNumWords(numWordsInput)
     if (!clamped) return
-    // TODO: Start the quiz with the selected settings
-    alert(`Start quiz: groups=${selectedGroups.join(',')}, numWords=${clamped}, type=${quizType}`)
+    setQuizQuestions(generateQuizQuestions(quizType))
+  }
+
+  const handleRestart = () => {
+    setQuizQuestions(null)
   }
 
   if (isLoading) {
     return <div className="min-h-screen flex items-center justify-center">Loading...</div>
+  }
+
+  if (quizQuestions) {
+    return <QuizPage questions={quizQuestions} onRestart={handleRestart} />
   }
 
   return (
