@@ -1,5 +1,5 @@
 import { Link, createFileRoute } from '@tanstack/react-router'
-import { BookOpen, Brain, Lightbulb, Volume2 } from 'lucide-react'
+import { BookOpen, Brain, Lightbulb, Volume2, Shuffle } from 'lucide-react'
 import { Button } from '../components/ui/button'
 
 export const Route = createFileRoute('/')({
@@ -50,6 +50,13 @@ function HomePage() {
               </Button>
             </Link>
           </div>
+          <div className="mt-4">
+            <Link to="/matching-game">
+              <Button variant="outline" size="lg" className="text-lg px-8">
+                Matching Game
+              </Button>
+            </Link>
+          </div>
         </div>
       </section>
 
@@ -79,6 +86,11 @@ function HomePage() {
               icon={Lightbulb}
               title="Interactive Quiz"
               description="Test your knowledge with multiple choice quizzes and typing exercises."
+            />
+            <FeatureCard
+              icon={Shuffle}
+              title="Matching Game"
+              description="Find synonym pairs in a fun, interactive grid game to reinforce your vocabulary."
             />
           </div>
         </div>

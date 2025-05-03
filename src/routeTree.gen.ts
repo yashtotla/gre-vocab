@@ -13,6 +13,7 @@
 import { Route as rootRoute } from './routes/__root'
 import { Route as WordsImport } from './routes/words'
 import { Route as QuizImport } from './routes/quiz'
+import { Route as MatchingGameImport } from './routes/matching-game'
 import { Route as FlashcardsImport } from './routes/flashcards'
 import { Route as IndexImport } from './routes/index'
 
@@ -27,6 +28,12 @@ const WordsRoute = WordsImport.update({
 const QuizRoute = QuizImport.update({
   id: '/quiz',
   path: '/quiz',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const MatchingGameRoute = MatchingGameImport.update({
+  id: '/matching-game',
+  path: '/matching-game',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -60,6 +67,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof FlashcardsImport
       parentRoute: typeof rootRoute
     }
+    '/matching-game': {
+      id: '/matching-game'
+      path: '/matching-game'
+      fullPath: '/matching-game'
+      preLoaderRoute: typeof MatchingGameImport
+      parentRoute: typeof rootRoute
+    }
     '/quiz': {
       id: '/quiz'
       path: '/quiz'
@@ -82,6 +96,7 @@ declare module '@tanstack/react-router' {
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/flashcards': typeof FlashcardsRoute
+  '/matching-game': typeof MatchingGameRoute
   '/quiz': typeof QuizRoute
   '/words': typeof WordsRoute
 }
@@ -89,6 +104,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/flashcards': typeof FlashcardsRoute
+  '/matching-game': typeof MatchingGameRoute
   '/quiz': typeof QuizRoute
   '/words': typeof WordsRoute
 }
@@ -97,22 +113,24 @@ export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
   '/flashcards': typeof FlashcardsRoute
+  '/matching-game': typeof MatchingGameRoute
   '/quiz': typeof QuizRoute
   '/words': typeof WordsRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/flashcards' | '/quiz' | '/words'
+  fullPaths: '/' | '/flashcards' | '/matching-game' | '/quiz' | '/words'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/flashcards' | '/quiz' | '/words'
-  id: '__root__' | '/' | '/flashcards' | '/quiz' | '/words'
+  to: '/' | '/flashcards' | '/matching-game' | '/quiz' | '/words'
+  id: '__root__' | '/' | '/flashcards' | '/matching-game' | '/quiz' | '/words'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   FlashcardsRoute: typeof FlashcardsRoute
+  MatchingGameRoute: typeof MatchingGameRoute
   QuizRoute: typeof QuizRoute
   WordsRoute: typeof WordsRoute
 }
@@ -120,6 +138,7 @@ export interface RootRouteChildren {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   FlashcardsRoute: FlashcardsRoute,
+  MatchingGameRoute: MatchingGameRoute,
   QuizRoute: QuizRoute,
   WordsRoute: WordsRoute,
 }
@@ -136,6 +155,7 @@ export const routeTree = rootRoute
       "children": [
         "/",
         "/flashcards",
+        "/matching-game",
         "/quiz",
         "/words"
       ]
@@ -145,6 +165,9 @@ export const routeTree = rootRoute
     },
     "/flashcards": {
       "filePath": "flashcards.tsx"
+    },
+    "/matching-game": {
+      "filePath": "matching-game.tsx"
     },
     "/quiz": {
       "filePath": "quiz.tsx"
