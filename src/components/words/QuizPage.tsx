@@ -88,7 +88,7 @@ export function QuizPage({ questions, onRestart }: QuizPageProps) {
                     onClick={() => handleReview(i)}
                   >
                     <span className={
-                      'inline-block w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold ' +
+                      'inline-block w-6 h-6 rounded-full items-center justify-center text-xs font-bold ' +
                       (answers[i] === q.correct
                         ? 'bg-green-500 text-white'
                         : 'bg-red-500 text-white')
