@@ -36,6 +36,13 @@ function HomePage() {
               Start Learning
             </Button>
           </Link>
+          <div className="mt-4">
+            <Link to="/flashcards">
+              <Button variant="outline" size="lg" className="text-lg px-8">
+                Flashcard Mode
+              </Button>
+            </Link>
+          </div>
         </div>
       </section>
 

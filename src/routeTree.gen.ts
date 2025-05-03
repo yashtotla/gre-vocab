@@ -12,6 +12,7 @@
 
 import { Route as rootRoute } from './routes/__root'
 import { Route as WordsImport } from './routes/words'
+import { Route as FlashcardsImport } from './routes/flashcards'
 import { Route as IndexImport } from './routes/index'
 
 // Create/Update Routes
@@ -19,6 +20,12 @@ import { Route as IndexImport } from './routes/index'
 const WordsRoute = WordsImport.update({
   id: '/words',
   path: '/words',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const FlashcardsRoute = FlashcardsImport.update({
+  id: '/flashcards',
+  path: '/flashcards',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -39,6 +46,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexImport
       parentRoute: typeof rootRoute
     }
+    '/flashcards': {
+      id: '/flashcards'
+      path: '/flashcards'
+      fullPath: '/flashcards'
+      preLoaderRoute: typeof FlashcardsImport
+      parentRoute: typeof rootRoute
+    }
     '/words': {
       id: '/words'
       path: '/words'
@@ -53,36 +67,41 @@ declare module '@tanstack/react-router' {
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/flashcards': typeof FlashcardsRoute
   '/words': typeof WordsRoute
 }
 
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/flashcards': typeof FlashcardsRoute
   '/words': typeof WordsRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
+  '/flashcards': typeof FlashcardsRoute
   '/words': typeof WordsRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/words'
+  fullPaths: '/' | '/flashcards' | '/words'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/words'
-  id: '__root__' | '/' | '/words'
+  to: '/' | '/flashcards' | '/words'
+  id: '__root__' | '/' | '/flashcards' | '/words'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  FlashcardsRoute: typeof FlashcardsRoute
   WordsRoute: typeof WordsRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  FlashcardsRoute: FlashcardsRoute,
   WordsRoute: WordsRoute,
 }
 
@@ -97,11 +116,15 @@ export const routeTree = rootRoute
       "filePath": "__root.tsx",
       "children": [
         "/",
+        "/flashcards",
         "/words"
       ]
     },
     "/": {
       "filePath": "index.tsx"
+    },
+    "/flashcards": {
+      "filePath": "flashcards.tsx"
     },
     "/words": {
       "filePath": "words.tsx"
