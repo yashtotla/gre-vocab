@@ -13,13 +13,13 @@ interface MyRouterContext {
 
 export const Route = createRootRouteWithContext<MyRouterContext>()({
   component: () => (
-    <>
+    <div className="min-h-screen bg-background">
       <Header />
-
-      <Outlet />
+      <main className="container mx-auto py-6">
+        <Outlet />
+      </main>
       <TanStackRouterDevtools />
-
       <TanstackQueryLayout />
-    </>
+    </div>
   ),
 })
