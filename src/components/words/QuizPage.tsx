@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 
@@ -22,6 +22,25 @@ export function QuizPage({ questions, onRestart }: QuizPageProps) {
 
   const question = questions[current]
 
+  // Keyboard navigation for review mode
+  const handleReviewKeyDown = useCallback((e: KeyboardEvent) => {
+    if (reviewIndex === null) return
+    if (e.key === 'ArrowRight') {
+      setReviewIndex(idx => (idx !== null && idx < questions.length - 1 ? idx + 1 : idx))
+    } else if (e.key === 'ArrowLeft') {
+      setReviewIndex(idx => (idx !== null && idx > 0 ? idx - 1 : idx))
+    } else if (e.key === 'Escape') {
+      setReviewIndex(null)
+    }
+  }, [reviewIndex, questions.length])
+
+  useEffect(() => {
+    if (reviewIndex !== null) {
+      window.addEventListener('keydown', handleReviewKeyDown)
+      return () => window.removeEventListener('keydown', handleReviewKeyDown)
+    }
+  }, [reviewIndex, handleReviewKeyDown])
+
   const handleSelect = (option: string) => {
     const newAnswers = [...answers]
     newAnswers[current] = option
@@ -35,13 +54,10 @@ export function QuizPage({ questions, onRestart }: QuizPageProps) {
 
   const handleReview = (idx: number) => {
     setReviewIndex(idx)
-    setShowResult(false)
-    setCurrent(idx)
   }
 
   const handleBackToResults = () => {
     setReviewIndex(null)
-    setShowResult(true)
   }
 
   if (showResult && reviewIndex === null) {
@@ -49,7 +65,6 @@ export function QuizPage({ questions, onRestart }: QuizPageProps) {
       (acc, ans, i) => acc + (ans === questions[i].correct ? 1 : 0),
       0
     )
-
     return (
       <div className="max-w-xl mx-auto mt-10 text-center">
         <Card>
@@ -59,36 +74,35 @@ export function QuizPage({ questions, onRestart }: QuizPageProps) {
           <CardContent>
             <div className="text-2xl font-bold mb-2">Score: {score} / {questions.length}</div>
             <div className="mb-4 text-left">
-              <div className="font-semibold mb-2">Review your answers:</div>
-              <div className="space-y-4">
+              <div className="font-semibold mb-2">Questions:</div>
+              <div className="grid gap-2">
                 {questions.map((q, i) => (
-                  <div
+                  <button
                     key={i}
                     className={
-                      'p-3 rounded border ' +
+                      'w-full text-left p-3 rounded border flex items-center gap-3 transition ' +
                       (answers[i] === q.correct
-                        ? 'border-green-200 bg-green-50'
-                        : 'border-red-200 bg-red-50')
+                        ? 'border-green-200 bg-green-50 hover:bg-green-100'
+                        : 'border-red-200 bg-red-50 hover:bg-red-100')
                     }
+                    onClick={() => handleReview(i)}
                   >
-                    <div className="font-medium">Q{i + 1}: {q.prompt}</div>
-                    <div>Your answer: <span className={answers[i] === q.correct ? 'text-green-700' : 'text-red-700'}>{answers[i] ?? <em>None</em>}</span></div>
-                    {answers[i] !== q.correct && (
-                      <div>Correct answer: <span className="text-green-700">{q.correct}</span></div>
-                    )}
-                    {q.explanation && (
-                      <div className="text-gray-500 mt-1">{q.explanation}</div>
-                    )}
-                    {answers[i] !== q.correct && (
-                      <Button size="sm" variant="outline" className="mt-2" onClick={() => handleReview(i)}>
-                        Review this question
-                      </Button>
-                    )}
-                  </div>
+                    <span className={
+                      'inline-block w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold ' +
+                      (answers[i] === q.correct
+                        ? 'bg-green-500 text-white'
+                        : 'bg-red-500 text-white')
+                    }>
+                      {answers[i] === q.correct ? '✓' : '✗'}
+                    </span>
+                    <span className="truncate">Q{i + 1}: {q.prompt}</span>
+                  </button>
                 ))}
               </div>
             </div>
-            <Button onClick={onRestart} className="mt-4">New Quiz</Button>
+            <div className="flex flex-col gap-2 mt-6">
+              <Button onClick={onRestart} className="w-full">New Quiz</Button>
+            </div>
           </CardContent>
         </Card>
       </div>
@@ -124,7 +138,7 @@ export function QuizPage({ questions, onRestart }: QuizPageProps) {
                 </Button>
               ))}
             </div>
-            <div className="text-sm">
+            <div className="text-sm mb-4">
               {answers[reviewIndex] === q.correct ? (
                 <span className="text-green-600 font-semibold">You answered correctly!</span>
               ) : (
@@ -134,7 +148,11 @@ export function QuizPage({ questions, onRestart }: QuizPageProps) {
                 <div className="mt-2 text-gray-500">{q.explanation}</div>
               )}
             </div>
-            <Button className="mt-4" onClick={handleBackToResults}>Back to Results</Button>
+            <div className="flex flex-col gap-2">
+              <Button onClick={handleBackToResults} className="w-full">Back to Quiz Review</Button>
+              <Button onClick={onRestart} className="w-full" variant="outline">New Quiz</Button>
+            </div>
+            <div className="mt-4 text-xs text-gray-400">Use ←/→ to navigate, Esc to return</div>
           </CardContent>
         </Card>
       </div>
