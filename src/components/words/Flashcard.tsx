@@ -35,10 +35,11 @@ export function Flashcard({ word, flipped, onFlip }: FlashcardProps) {
   return (
     <div
       ref={cardRef}
-      className={`relative w-full h-72 max-w-lg mx-auto cursor-pointer perspective`}
+      className={`relative w-full h-72 max-w-lg mx-auto cursor-pointer perspective select-none`}
       tabIndex={0}
       onClick={onFlip}
-      aria-label="Flip flashcard"
+      aria-label={flipped ? `Show front of card for ${word.word}` : `Show back of card for ${word.word}`}
+      style={{ minHeight: '18rem' }}
     >
       <div
         className={`absolute w-full h-full transition-transform duration-500 [transform-style:preserve-3d] ${flipped ? 'rotate-y-180' : ''}`}
@@ -46,18 +47,19 @@ export function Flashcard({ word, flipped, onFlip }: FlashcardProps) {
         {/* Front */}
         <Card className="absolute w-full h-full flex items-center justify-center [backface-visibility:hidden]">
           <CardHeader>
-            <CardTitle className="text-3xl text-center">{word.word}</CardTitle>
+            <CardTitle className="text-3xl text-center break-words">{word.word}</CardTitle>
           </CardHeader>
         </Card>
         {/* Back */}
         <Card className="absolute w-full h-full [transform:rotateY(180deg)] [backface-visibility:hidden] overflow-y-auto">
           <CardHeader>
-            <CardTitle className="text-xl text-center">{word.word}</CardTitle>
+            <CardTitle className="text-xl text-center break-words">{word.word}</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
               {word.definitions.map((def, idx) => (
                 <div key={idx} className="space-y-1">
+                  {idx > 0 && <hr className="my-2 border-gray-200" />}
                   <p className="text-sm text-gray-500">{def.part_of_speech}</p>
                   <p>{def.definition}</p>
                   {def.example && (
