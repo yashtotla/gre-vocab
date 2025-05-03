@@ -199,7 +199,7 @@ export function QuizSetupPage() {
           </div>
           {/* Number of Words */}
           <div>
-            <label className="font-semibold mb-2 block">Number of Words</label>
+            <label className="font-semibold mb-2 block">Number of Questions</label>
             <Input
               type="text"
               min={1}
