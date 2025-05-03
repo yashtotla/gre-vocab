@@ -43,6 +43,13 @@ function HomePage() {
               </Button>
             </Link>
           </div>
+          <div className="mt-4">
+            <Link to="/quiz">
+              <Button variant="outline" size="lg" className="text-lg px-8">
+                Quiz Mode
+              </Button>
+            </Link>
+          </div>
         </div>
       </section>
 

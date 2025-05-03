@@ -32,6 +32,13 @@ export default function Header() {
               </Link>
             </NavigationMenuLink>
           </NavigationMenuItem>
+          <NavigationMenuItem>
+            <NavigationMenuLink asChild>
+              <Link to="/quiz" className="font-bold text-lg">
+                Quiz
+              </Link>
+            </NavigationMenuLink>
+          </NavigationMenuItem>
         </NavigationMenuList>
       </NavigationMenu>
     </header>
