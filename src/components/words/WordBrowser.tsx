@@ -49,12 +49,12 @@ export function WordBrowser() {
   })
 
   if (isLoading) {
-    return <div>Loading...</div>
+    return <div className="min-h-screen flex items-center justify-center">Loading...</div>
   }
 
   return (
     <div className="container mx-auto p-4">
-      <h1 className="text-3xl font-bold mb-6">GRE Vocabulary</h1>
+      <h1 className="text-3xl font-bold mb-6 text-center">GRE Vocabulary</h1>
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Word Groups */}
@@ -67,9 +67,9 @@ export function WordBrowser() {
               {wordGroups?.map(({ group }) => (
                 <Button
                   key={group}
-                  variant={selectedGroup === group ? "default" : "outline"}
-                  onClick={() => setSelectedGroup(group)}
+                  variant={selectedGroup === group ? undefined : "outline"}
                   className="w-full"
+                  onClick={() => setSelectedGroup(group)}
                 >
                   Group {group}
                 </Button>
@@ -91,9 +91,9 @@ export function WordBrowser() {
                   ?.words.map(word => (
                     <Button
                       key={word.slug}
-                      variant={selectedWord?.slug === word.slug ? "default" : "outline"}
-                      onClick={() => setSelectedWord(word)}
+                      variant={selectedWord?.slug === word.slug ? undefined : "outline"}
                       className="w-full"
+                      onClick={() => setSelectedWord(word)}
                     >
                       {word.word}
                     </Button>
@@ -106,24 +106,24 @@ export function WordBrowser() {
 
       {/* Word Detail View */}
       {selectedWord && (
-        <Card className="mt-6">
+        <Card className="mt-6 max-w-2xl mx-auto">
           <CardHeader>
-            <CardTitle>{selectedWord.word}</CardTitle>
+            <CardTitle className="text-2xl font-bold">{selectedWord.word}</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
               {selectedWord.definitions.map((def, index) => (
                 <div key={index} className="space-y-2">
-                  <p className="text-sm text-muted-foreground">
+                  <p className="text-sm text-gray-500">
                     {def.part_of_speech}
                   </p>
                   <p>{def.definition}</p>
                   {def.example && (
-                    <p className="text-sm italic">"{def.example}"</p>
+                    <p className="text-sm italic text-gray-500">"{def.example}"</p>
                   )}
                   {def.synonyms.length > 0 && (
                     <div>
-                      <p className="text-sm text-muted-foreground">Synonyms:</p>
+                      <p className="text-sm text-gray-500">Synonyms:</p>
                       <div className="flex flex-wrap gap-2">
                         {def.synonyms.map(synonym => (
                           <Button
