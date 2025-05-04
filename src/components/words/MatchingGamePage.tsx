@@ -53,6 +53,10 @@ export default function MatchingGamePage() {
   const [matched, setMatched] = useState<Set<number>>(new Set())
   const [selected, setSelected] = useState<number[]>([])
   const [attempts, setAttempts] = useState(0)
+  const [wrongPair, setWrongPair] = useState<number[] | null>(null)
+  const [inputDisabled, setInputDisabled] = useState(false)
+  const [currentStreak, setCurrentStreak] = useState(0)
+  const [bestStreak, setBestStreak] = useState(0)
 
   const { data: words, isLoading } = useQuery({
     queryKey: ['vocab'],
@@ -95,11 +99,12 @@ export default function MatchingGamePage() {
     setMatched(new Set())
     setSelected([])
     setAttempts(0)
+    setCurrentStreak(0)
     setGameStarted(true)
   }
 
   const handleTileClick = (idx: number) => {
-    if (matched.has(idx) || selected.includes(idx)) return
+    if (inputDisabled || matched.has(idx) || selected.includes(idx)) return
     if (selected.length === 0) {
       setSelected([idx])
     } else if (selected.length === 1) {
@@ -107,13 +112,28 @@ export default function MatchingGamePage() {
       const firstTile = tiles[firstIdx]
       const secondTile = tiles[idx]
       setAttempts(a => a + 1)
-      if (firstTile.pair === secondTile.word) {
-        setMatched(prev => new Set([...prev, firstIdx, idx]))
-        setTimeout(() => setSelected([]), 500)
-      } else {
-        setTimeout(() => setSelected([]), 700)
-      }
       setSelected([firstIdx, idx])
+      setInputDisabled(true)
+      if (firstTile.pair === secondTile.word) {
+        setTimeout(() => {
+          setMatched(prev => new Set([...prev, firstIdx, idx]))
+          setCurrentStreak(s => {
+            const newStreak = s + 1
+            setBestStreak(b => (newStreak > b ? newStreak : b))
+            return newStreak
+          })
+          setSelected([])
+          setInputDisabled(false)
+        }, 500)
+      } else {
+        setWrongPair([firstIdx, idx])
+        setCurrentStreak(0)
+        setTimeout(() => {
+          setWrongPair(null)
+          setSelected([])
+          setInputDisabled(false)
+        }, 700)
+      }
     }
   }
 
@@ -186,6 +206,7 @@ export default function MatchingGamePage() {
           <CardContent>
             <div className="text-2xl font-bold mb-2">Matched Pairs: {tiles.length / 2}</div>
             <div className="mb-2">Attempts: {attempts}</div>
+            <div className="mb-2 text-lg font-semibold">Best Streak: {bestStreak}</div>
             <Button onClick={() => setGameStarted(false)} className="mt-4">Play Again</Button>
           </CardContent>
         </Card>
@@ -198,6 +219,7 @@ export default function MatchingGamePage() {
       <Card>
         <CardContent>
           <div className="flex flex-col items-center mb-4">
+            <div className="text-lg font-semibold mb-1">Current Streak: {currentStreak}</div>
             <div className="text-lg font-semibold mb-1">Attempts: {attempts}</div>
             <div className="text-lg font-semibold mb-2">Matched Pairs: {matched.size / 2} / {tiles.length / 2}</div>
           </div>
@@ -208,14 +230,15 @@ export default function MatchingGamePage() {
             {tiles.map((tile, idx) => {
               const isMatched = matched.has(idx)
               const isSelected = selected.includes(idx)
+              const isWrong = wrongPair && wrongPair.includes(idx)
               return (
                 <Card
                   key={idx}
                   className={`h-[80px] w-[160px] cursor-pointer text-lg font-bold transition-all duration-200
-                    ${isMatched ? 'bg-green-50 opacity-60' : isSelected ? 'bg-blue-100' : ''}`}
+                    ${isMatched ? 'bg-green-50 opacity-60' : isWrong ? 'bg-red-200/60' : isSelected ? 'bg-blue-100' : ''}`}
                   onClick={() => handleTileClick(idx)}
                   tabIndex={isMatched ? -1 : 0}
-                  style={{ outline: isSelected ? '2px solid #2563eb' : undefined }}
+                  style={{ outline: isSelected && !isWrong ? '2px solid #2563eb' : undefined }}
                 >
                   <CardContent className="flex items-center justify-center h-full w-full p-0">
                     {isMatched ? <Check className="text-green-500 w-8 h-8" /> : tile.word}
