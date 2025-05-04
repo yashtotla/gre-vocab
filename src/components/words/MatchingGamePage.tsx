@@ -57,6 +57,7 @@ export default function MatchingGamePage() {
   const [inputDisabled, setInputDisabled] = useState(false)
   const [currentStreak, setCurrentStreak] = useState(0)
   const [bestStreak, setBestStreak] = useState(0)
+  const [incorrectAttempts, setIncorrectAttempts] = useState<{ pair: [string, string], count: number }[]>([])
 
   const { data: words, isLoading } = useQuery({
     queryKey: ['vocab'],
@@ -100,6 +101,7 @@ export default function MatchingGamePage() {
     setSelected([])
     setAttempts(0)
     setCurrentStreak(0)
+    setIncorrectAttempts([])
     setGameStarted(true)
   }
 
@@ -128,6 +130,21 @@ export default function MatchingGamePage() {
       } else {
         setWrongPair([firstIdx, idx])
         setCurrentStreak(0)
+        setIncorrectAttempts(prev => {
+          const pair = [firstTile.word, secondTile.word] as [string, string]
+          // Check if this pair already exists (in either order)
+          const idx = prev.findIndex(
+            p => (p.pair[0] === pair[0] && p.pair[1] === pair[1]) || (p.pair[0] === pair[1] && p.pair[1] === pair[0])
+          )
+          if (idx !== -1) {
+            // Increment count
+            const updated = [...prev]
+            updated[idx] = { ...updated[idx], count: updated[idx].count + 1 }
+            return updated
+          } else {
+            return [...prev, { pair, count: 1 }]
+          }
+        })
         setTimeout(() => {
           setWrongPair(null)
           setSelected([])
@@ -197,6 +214,24 @@ export default function MatchingGamePage() {
   const allMatched = matched.size === tiles.length
 
   if (allMatched) {
+    // Prepare matched pairs for review
+    const matchedPairs: [string, string][] = []
+    const matchedSet = new Set<number>()
+    for (let i = 0; i < tiles.length; i++) {
+      if (matched.has(i) && !matchedSet.has(i)) {
+        const word = tiles[i].word
+        const pairWord = tiles[i].pair
+        // Find the index of the pair
+        const pairIdx = tiles.findIndex((t, idx) => t.word === pairWord && t.pair === word && matched.has(idx) && idx !== i)
+        if (pairIdx !== -1 && !matchedSet.has(pairIdx)) {
+          matchedPairs.push([word, pairWord])
+          matchedSet.add(i)
+          matchedSet.add(pairIdx)
+        }
+      }
+    }
+    // Sort incorrect attempts by count descending
+    const sortedIncorrect = [...incorrectAttempts].sort((a, b) => b.count - a.count)
     return (
       <div className="flex items-center justify-center text-center mt-10">
         <Card>
@@ -207,6 +242,28 @@ export default function MatchingGamePage() {
             <div className="text-2xl font-bold mb-2">Matched Pairs: {tiles.length / 2}</div>
             <div className="mb-2">Attempts: {attempts}</div>
             <div className="mb-2 text-lg font-semibold">Best Streak: {bestStreak}</div>
+            <div className="mb-8">
+              <div className="font-semibold text-center text-lg mb-4">Matched Synonym Pairs</div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                {matchedPairs.map(([a, b], i) => (
+                  <div key={i} className="bg-green-50 border border-green-200 rounded-lg px-4 py-3 text-green-900 text-center font-medium shadow-sm">
+                    {a} <span className="text-green-700">↔️</span> {b}
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div className="my-8 border-t border-gray-200"></div>
+            <div className="mb-4">
+              <div className="font-semibold text-center text-lg mb-4">Incorrect Attempts</div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                {sortedIncorrect.length === 0 && <div className="text-gray-500 text-center w-full col-span-1 sm:col-span-2">No mistakes! 🎉</div>}
+                {sortedIncorrect.map((item, i) => (
+                  <div key={i} className="bg-red-50 border border-red-200 rounded-lg px-4 py-3 text-red-900 text-center font-medium shadow-sm">
+                    {item.pair[0]} <span className="text-red-700">&amp;</span> {item.pair[1]} <span className="text-xs">({item.count}x)</span>
+                  </div>
+                ))}
+              </div>
+            </div>
             <Button onClick={() => setGameStarted(false)} className="mt-4">Play Again</Button>
           </CardContent>
         </Card>
