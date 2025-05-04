@@ -207,7 +207,7 @@ export function QuizSetupPage() {
               value={numWordsInput}
               onChange={handleNumWordsChange}
               onBlur={handleNumWordsBlur}
-              placeholder="Number of words"
+              placeholder="10"
               className="w-32"
               inputMode="numeric"
               pattern="[0-9]*"
