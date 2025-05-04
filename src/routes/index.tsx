@@ -110,6 +110,10 @@ function HomePage() {
           </Link>
         </div>
       </section>
+
+      <footer className="text-center text-xs text-gray-500 py-4 border-t bg-white">
+        Vocabulary data sourced from <a href="https://www.gregmat.com/" target="_blank" rel="noopener noreferrer" className="underline hover:text-blue-600">GregMAT</a>.
+      </footer>
     </div>
   )
 }

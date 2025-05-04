@@ -8,7 +8,7 @@ import {
 
 export default function Header() {
   return (
-    <header className="bg-white border-b border-gray-200 px-4 py-2 flex items-center justify-between">
+    <header className="bg-white border-b border-gray-200 px-4 py-2 flex items-center justify-center">
       <NavigationMenu>
         <NavigationMenuList>
           <NavigationMenuItem>
