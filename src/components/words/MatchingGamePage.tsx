@@ -123,14 +123,31 @@ export default function MatchingGamePage() {
 
   if (!gameStarted) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <Card className="w-full max-w-md">
+      <div className="container mx-auto p-4 max-w-2xl">
+        <h1 className="text-3xl font-bold mb-6 text-center">Matching Game Setup</h1>
+        <Card>
           <CardHeader>
-            <CardTitle>Matching Game Setup</CardTitle>
+            <CardTitle>Customize Your Game</CardTitle>
           </CardHeader>
           <CardContent className="space-y-6">
+            {/* Group Multi-select */}
             <div>
-              <div className="font-semibold mb-2">Select Grid Size</div>
+              <div className="font-semibold mb-2">Select Groups</div>
+              <div className="flex flex-wrap gap-2">
+                {groupOptions.map((group: number) => (
+                  <label key={group} className="flex items-center gap-2 cursor-pointer">
+                    <Checkbox
+                      checked={selectedGroups.includes(group)}
+                      onCheckedChange={checked => handleGroupChange(group, !!checked)}
+                    />
+                    <span>Group {group}</span>
+                  </label>
+                ))}
+              </div>
+            </div>
+            {/* Grid Size Selection */}
+            <div>
+              <label className="font-semibold mb-2 block">Grid Size</label>
               <RadioGroup value={gridSize} onValueChange={setGridSize} className="flex gap-4 flex-wrap">
                 <label className="flex items-center gap-2 cursor-pointer">
                   <RadioGroupItem value="4x3" />
@@ -146,20 +163,6 @@ export default function MatchingGamePage() {
                 </label>
               </RadioGroup>
             </div>
-            <div>
-              <div className="font-semibold mb-2">Select Groups</div>
-              <div className="flex flex-wrap gap-2 mb-4">
-                {groupOptions.map((group: number) => (
-                  <label key={group} className="flex items-center gap-2 cursor-pointer">
-                    <Checkbox
-                      checked={selectedGroups.includes(group)}
-                      onCheckedChange={checked => handleGroupChange(group, !!checked)}
-                    />
-                    <span>Group {group}</span>
-                  </label>
-                ))}
-              </div>
-            </div>
             <Button className="w-full mt-4" onClick={handleStart} disabled={selectedGroups.length === 0}>
               Start Game
             </Button>
@@ -173,42 +176,56 @@ export default function MatchingGamePage() {
   const [rows, cols] = gridSize.split('x').map(Number)
   const allMatched = matched.size === tiles.length
 
+  if (allMatched) {
+    return (
+      <div className="flex items-center justify-center text-center mt-10">
+        <Card>
+          <CardHeader>
+            <CardTitle>Game Complete!</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold mb-2">Matched Pairs: {tiles.length / 2}</div>
+            <div className="mb-2">Attempts: {attempts}</div>
+            <Button onClick={() => setGameStarted(false)} className="mt-4">Play Again</Button>
+          </CardContent>
+        </Card>
+      </div>
+    )
+  }
+
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50 p-4">
-      <div className="mb-4 flex flex-col items-center">
-        <div className="text-lg font-semibold mb-2">Attempts: {attempts}</div>
-        <div className="text-lg font-semibold mb-2">Matched Pairs: {matched.size / 2} / {tiles.length / 2}</div>
-      </div>
-      <div
-        className="grid gap-2 bg-white p-2 rounded-xl shadow border max-w-full overflow-x-auto place-items-center"
-        style={{ gridTemplateColumns: `repeat(${cols}, minmax(0, 200px))`, gridTemplateRows: `repeat(${rows}, minmax(0, 100px))` }}
-      >
-        {tiles.map((tile, idx) => {
-          const isMatched = matched.has(idx)
-          const isSelected = selected.includes(idx)
-          return (
-            <Card
-              key={idx}
-              className={`h-[100px] w-[200px] cursor-pointer text-lg font-bold transition-all duration-200
-                ${isMatched ? 'bg-green-50 opacity-60' : isSelected ? 'bg-blue-100' : ''}`}
-              onClick={() => handleTileClick(idx)}
-              tabIndex={isMatched ? -1 : 0}
-              style={{ outline: isSelected ? '2px solid #2563eb' : undefined }}
-            >
-              <CardContent className="flex items-center justify-center h-full w-full p-0">
-                {isMatched ? <Check className="text-green-500 w-8 h-8" /> : tile.word}
-              </CardContent>
-            </Card>
-          )
-        })}
-      </div>
-      {allMatched && (
-        <div className="mt-8 text-center">
-          <div className="text-2xl font-bold mb-2">You matched all pairs!</div>
-          <div className="mb-4">Attempts: {attempts}</div>
-          <Button onClick={() => setGameStarted(false)}>Play Again</Button>
-        </div>
-      )}
+    <div className="flex items-center justify-center mt-10">
+      <Card>
+        <CardContent>
+          <div className="flex flex-col items-center mb-4">
+            <div className="text-lg font-semibold mb-1">Attempts: {attempts}</div>
+            <div className="text-lg font-semibold mb-2">Matched Pairs: {matched.size / 2} / {tiles.length / 2}</div>
+          </div>
+          <div
+            className="grid gap-4 bg-white p-4 rounded-xl shadow border max-w-full overflow-x-auto place-items-center"
+            style={{ gridTemplateColumns: `repeat(${cols}, minmax(0, 160px))`, gridTemplateRows: `repeat(${rows}, minmax(0, 80px))` }}
+          >
+            {tiles.map((tile, idx) => {
+              const isMatched = matched.has(idx)
+              const isSelected = selected.includes(idx)
+              return (
+                <Card
+                  key={idx}
+                  className={`h-[80px] w-[160px] cursor-pointer text-lg font-bold transition-all duration-200
+                    ${isMatched ? 'bg-green-50 opacity-60' : isSelected ? 'bg-blue-100' : ''}`}
+                  onClick={() => handleTileClick(idx)}
+                  tabIndex={isMatched ? -1 : 0}
+                  style={{ outline: isSelected ? '2px solid #2563eb' : undefined }}
+                >
+                  <CardContent className="flex items-center justify-center h-full w-full p-0">
+                    {isMatched ? <Check className="text-green-500 w-8 h-8" /> : tile.word}
+                  </CardContent>
+                </Card>
+              )
+            })}
+          </div>
+        </CardContent>
+      </Card>
     </div>
   )
 } 
