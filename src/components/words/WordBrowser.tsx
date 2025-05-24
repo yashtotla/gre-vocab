@@ -7,22 +7,8 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { useWordGroups } from '@/hooks/useWordGroups'
 
-interface Word {
-  word: string
-  slug: string
-  group: number
-  pronunciation_url: string
-  definitions: Array<{
-    part_of_speech: string
-    definition: string
-    example: string | null
-    synonyms: Array<string>
-  }>
-}
-
 export function WordBrowser() {
   const [selectedGroup, setSelectedGroup] = useState<number | null>(null)
-  const [selectedWord, setSelectedWord] = useState<Word | null>(null)
   const [search, setSearch] = useState('')
   const debouncedSearch = useDebounce(search, 300)
 
@@ -38,7 +24,7 @@ export function WordBrowser() {
         'definitions.synonyms',
       ],
       includeMatches: true,
-      threshold: 0.4, // good balance for fuzzy
+      threshold: 0.4,
       minMatchCharLength: 2,
       ignoreLocation: true,
     }),
@@ -65,7 +51,6 @@ export function WordBrowser() {
           onChange={e => {
             setSearch(e.target.value)
             setSelectedGroup(null)
-            setSelectedWord(null)
           }}
         />
       </div>
@@ -86,7 +71,6 @@ export function WordBrowser() {
               )}
               {searchResults.slice(0, 10).map(result => {
                 const word = result.item
-                // Prepare highlight match data for WordCard
                 let wordMatch: Array<[number, number]> = []
                 const defMatches: Record<number, Array<[number, number]>> = {}
                 const exampleMatches: Record<number, Array<[number, number]>> = {}
@@ -119,23 +103,19 @@ export function WordBrowser() {
         </div>
       ) : (
         // Regular group/word browser UI
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="space-y-6">
           {/* Word Groups */}
           <Card>
             <CardHeader>
-              <CardTitle>Word Groups</CardTitle>
+              <CardTitle>Select a Group</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
+              <div className="flex flex-wrap gap-2">
                 {wordGroups?.map(({ group }) => (
                   <Button
                     key={group}
                     variant={selectedGroup === group ? undefined : "outline"}
-                    className="w-full"
-                    onClick={() => {
-                      setSelectedGroup(group)
-                      setSelectedWord(null)
-                    }}
+                    onClick={() => setSelectedGroup(group)}
                   >
                     Group {group}
                   </Button>
@@ -146,34 +126,15 @@ export function WordBrowser() {
 
           {/* Words in Selected Group */}
           {selectedGroup && (
-            <Card>
-              <CardHeader>
-                <CardTitle>Words in Group {selectedGroup}</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-                  {wordGroups
-                    ?.find(g => g.group === selectedGroup)
-                    ?.words.map(word => (
-                      <Button
-                        key={word.slug}
-                        variant={selectedWord?.slug === word.slug ? undefined : "outline"}
-                        className="w-full"
-                        onClick={() => setSelectedWord(word)}
-                      >
-                        {word.word}
-                      </Button>
-                    ))}
-                </div>
-              </CardContent>
-            </Card>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {wordGroups
+                ?.find(g => g.group === selectedGroup)
+                ?.words.map(word => (
+                  <WordCard key={word.slug} word={word} />
+                ))}
+            </div>
           )}
         </div>
-      )}
-
-      {/* Word Detail View */}
-      {selectedWord && (
-        <WordCard word={selectedWord} />
       )}
     </div>
   )
