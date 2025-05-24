@@ -9,9 +9,9 @@ import {
 export default function Header() {
   return (
     <header className="bg-white border-b border-gray-200 px-4 py-2 flex items-center justify-between w-full">
-      <a href="/" className="ml-4 flex items-center" style={{ minWidth: 48 }}>
+      <Link to="/" className="ml-4 flex items-center" style={{ minWidth: 48 }}>
         <img src="/logo.png" alt="Vocab Mountain Logo" className="h-10 w-auto" />
-      </a>
+      </Link>
       <div className="flex-1 flex justify-center">
         <NavigationMenu>
           <NavigationMenuList>
