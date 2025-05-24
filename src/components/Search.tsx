@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { Search as SearchIcon, X } from 'lucide-react'
+import { Search as SearchIcon } from 'lucide-react'
 import Fuse from 'fuse.js'
 import { Button } from './ui/button'
 import { Card, CardContent } from './ui/card'
@@ -7,13 +7,7 @@ import { Input } from './ui/input'
 import { WordCard } from './words/WordCard'
 import { useDebounce } from '@/hooks/useDebounce'
 import { useWordGroups } from '@/hooks/useWordGroups'
-import {
-  Sheet,
-  SheetContent,
-  SheetTrigger,
-  SheetHeader,
-  SheetClose,
-} from './ui/sheet'
+import { Sheet, SheetContent, SheetTrigger, SheetHeader } from './ui/sheet'
 
 export function Search() {
   const [isOpen, setIsOpen] = useState(false)
@@ -25,12 +19,7 @@ export function Search() {
 
   // Fuse.js setup
   const fuse = new Fuse(allWords, {
-    keys: [
-      'word',
-      'definitions.definition',
-      'definitions.example',
-      'definitions.synonyms',
-    ],
+    keys: ['word', 'definitions.definition', 'definitions.example', 'definitions.synonyms'],
     includeMatches: true,
     threshold: 0.4,
     minMatchCharLength: 2,
@@ -60,33 +49,19 @@ export function Search() {
   return (
     <Sheet open={isOpen} onOpenChange={setIsOpen}>
       <SheetTrigger asChild>
-        <Button
-          variant="ghost"
-          size="icon"
-          className="h-9 w-9"
-          onClick={() => {
-            setIsOpen(true)
-            setTimeout(() => inputRef.current?.focus(), 0)
-          }}
-        >
-          <SearchIcon className="h-5 w-5" />
-          <span className="sr-only">Search</span>
+        <Button variant="ghost" size="icon">
+          <SearchIcon />
         </Button>
       </SheetTrigger>
-      <SheetContent side="right" className="p-0 max-w-full w-full sm:w-96 flex flex-col">
-        <SheetHeader className="border-b p-4 flex flex-row items-center gap-2">
+      <SheetContent side="right" className="w-full sm:w-80">
+        <SheetHeader className="border-b flex flex-row items-center gap-2">
           <Input
             ref={inputRef}
             placeholder="Search words, definitions, or examples..."
             value={search}
             onChange={e => setSearch(e.target.value)}
-            className="flex-1"
+            className="flex-1 max-w-11/12"
           />
-          <SheetClose asChild>
-            <Button variant="ghost" size="icon">
-              <X className="h-5 w-5" />
-            </Button>
-          </SheetClose>
         </SheetHeader>
         <div className="flex-1 overflow-y-auto p-4">
           {searchResults.length === 0 ? (
