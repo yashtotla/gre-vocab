@@ -1,8 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Flashcard } from './Flashcard'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { GroupSelector } from './GroupSelector'
 import { Button } from '@/components/ui/button'
-import { Switch } from '@/components/ui/switch'
 import { useWordGroups } from '@/hooks/useWordGroups'
 
 function shuffleArray<T>(array: Array<T>): Array<T> {
@@ -75,30 +74,14 @@ export function FlashcardsPage() {
   return (
     <div className="container mx-auto p-4">
       <h1 className="text-3xl font-bold mb-6 text-center">Flashcards</h1>
-      <Card className="mb-8">
-        <CardHeader>
-          <CardTitle>Select a Group</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="flex flex-wrap gap-2 mb-4">
-            {wordGroups?.map(({ group }) => (
-              <Button
-                key={group}
-                variant={selectedGroup === group ? undefined : 'outline'}
-                onClick={() => setSelectedGroup(group)}
-              >
-                Group {group}
-              </Button>
-            ))}
-          </div>
-          <div className="flex items-center gap-2 mt-2">
-            <Switch id="shuffle" checked={shuffle} onCheckedChange={setShuffle} />
-            <label htmlFor="shuffle" className="text-sm text-gray-700 cursor-pointer select-none">
-              Shuffle
-            </label>
-          </div>
-        </CardContent>
-      </Card>
+      <GroupSelector
+        wordGroups={wordGroups}
+        selectedGroup={selectedGroup}
+        onGroupSelect={setSelectedGroup}
+        showShuffle={true}
+        shuffle={shuffle}
+        onShuffleChange={setShuffle}
+      />
       {selectedGroup && groupWords.length > 0 ? (
         <div className="flex flex-col items-center gap-6">
           {/* Progress Bar */}

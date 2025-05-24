@@ -1,9 +1,9 @@
 import { useMemo, useState } from 'react'
 import Fuse from 'fuse.js'
 import { WordCard } from './WordCard'
+import { GroupSelector } from './GroupSelector'
 import { useDebounce } from '@/hooks/useDebounce'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
+import { Card, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { useWordGroups } from '@/hooks/useWordGroups'
 
@@ -104,25 +104,11 @@ export function WordBrowser() {
       ) : (
         // Regular group/word browser UI
         <div className="space-y-6">
-          {/* Word Groups */}
-          <Card>
-            <CardHeader>
-              <CardTitle>Select a Group</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="flex flex-wrap gap-2">
-                {wordGroups?.map(({ group }) => (
-                  <Button
-                    key={group}
-                    variant={selectedGroup === group ? undefined : "outline"}
-                    onClick={() => setSelectedGroup(group)}
-                  >
-                    Group {group}
-                  </Button>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
+          <GroupSelector
+            wordGroups={wordGroups}
+            selectedGroup={selectedGroup}
+            onGroupSelect={setSelectedGroup}
+          />
 
           {/* Words in Selected Group */}
           {selectedGroup && (
