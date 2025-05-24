@@ -110,7 +110,7 @@
       {
         "part_of_speech": "adjective",
         "definition": "(of a thing) enjoyable because it aligns with one's tendencies",
-        "example": null,
+        "example": "She found the small town a more congenial way of life.",
         "synonyms": ["pleasant", "agreeable", "appealing"]
       }
     ]
@@ -307,7 +307,7 @@
         "part_of_speech": "noun",
         "definition": "a misleading or inaccurate name",
         "example": "The authoritarian regime likes to call itself a \"democracy,\" an obvious misnomer.",
-        "synonyms": ["We can't find any"]
+        "synonyms": []
       }
     ]
   },
@@ -1038,7 +1038,7 @@
       {
         "part_of_speech": "verb",
         "definition": "fulfill a certain desire",
-        "example": null,
+        "example": "Only a buffet could assuage his appetite.",
         "synonyms": ["satisfy", "gratify", "satiate"]
       }
     ]
@@ -1245,7 +1245,7 @@
         "part_of_speech": "adjective",
         "definition": "worldly",
         "example": "His cosmopolitan demeanor made him the perfect diplomat.",
-        "synonyms": []
+        "synonyms": ["worldly", "elegant", "refined"]
       }
     ]
   },
@@ -1697,7 +1697,7 @@
         "part_of_speech": "noun",
         "definition": "sagacity",
         "example": "James claims to possess profundity, but his advice often comes from Google.",
-        "synonyms": []
+        "synonyms": ["sagacity", "acuity", "percipience"]
       }
     ]
   },
@@ -1960,8 +1960,8 @@
       {
         "part_of_speech": "adjective",
         "definition": "lighthearted",
-        "example": null,
-        "synonyms": []
+        "example": "Believing that, in the end, nothing really matters, he's adopted a frivolous attitude.",
+        "synonyms": ["lighthearted", "whimsical", "zany"]
       }
     ]
   },
@@ -2008,7 +2008,7 @@
       {
         "part_of_speech": "adjective",
         "definition": "irrelevant or unrelated to something",
-        "example": null,
+        "example": "Employees kept bringing up impertinent issues at the meeting.",
         "synonyms": ["inapposite", "immaterial", "inapplicable"]
       }
     ]
@@ -2258,7 +2258,7 @@
       {
         "part_of_speech": "verb",
         "definition": "give someone urgent advice",
-        "example": null,
+        "example": "The teacher admonished her class to submit their college applications on time.",
         "synonyms": ["advise", "urge", "counsel"]
       }
     ]
@@ -2606,7 +2606,7 @@
       {
         "part_of_speech": "adjective",
         "definition": "(of a situation) easy to solve or handle",
-        "example": null,
+        "example": "Once it was thoroughly investigated, the problem proved to be not so tractable.",
         "synonyms": ["manageable", "fixable", "crackable"]
       }
     ]
@@ -2696,7 +2696,7 @@
       {
         "part_of_speech": "verb",
         "definition": "satisfy a demand or desire",
-        "example": null,
+        "example": "No amount of food could appease his appetite.",
         "synonyms": ["relieve", "gratify", "quench"]
       }
     ]
@@ -3036,7 +3036,7 @@
       {
         "part_of_speech": "adjective",
         "definition": "(of an object, person, or organization) strong and powerful",
-        "example": null,
+        "example": "The company survived the recession due to its robust income streams.",
         "synonyms": ["solid", "vigorous", "healthy"]
       }
     ]
@@ -3056,7 +3056,7 @@
       {
         "part_of_speech": "adjective",
         "definition": "(of a place or accommodation) pleasant",
-        "example": null,
+        "example": "The hotel room was salubrious.",
         "synonyms": ["agreeable", "luxurious", "grand"]
       }
     ]
@@ -4057,7 +4057,7 @@
         "part_of_speech": "adjective",
         "definition": "recondite",
         "example": "The esoteric lecture was only understood by a few specialists in the audience.",
-        "synonyms": []
+        "synonyms": ["recondite", "arcane", "abstruse"]
       }
     ]
   },
@@ -4267,7 +4267,7 @@
         "part_of_speech": "adjective",
         "definition": "insular",
         "example": "Despite his provincial attitudes, he was a kind-hearted man.",
-        "synonyms": []
+        "synonyms": ["insular", "parochial", "myopic"]
       }
     ]
   },
@@ -4434,7 +4434,7 @@
       {
         "part_of_speech": "adjective",
         "definition": "honorable and polite",
-        "example": null,
+        "example": "He displayed chivalrous behavior by holding the door open for her.",
         "synonyms": ["gallant", "courteous", "gentle"]
       }
     ]
@@ -5180,7 +5180,7 @@
       {
         "part_of_speech": "adjective",
         "definition": "(of weather) extremely stormy",
-        "example": null,
+        "example": "Only one boat captain was crazy enough to enter the tempestuous waters.",
         "synonyms": ["blustery", "gusty", "squally"]
       }
     ]
@@ -5602,7 +5602,7 @@
       {
         "part_of_speech": "verb",
         "definition": "making something unclear and vague",
-        "example": null,
+        "example": "The author intentionally obscures the true meaning of his books.",
         "synonyms": ["obfuscate", "cloud", "muddy"]
       }
     ]
@@ -5636,7 +5636,7 @@
       {
         "part_of_speech": "adjective",
         "definition": "(of a body of water or substance) transparent and clear",
-        "example": null,
+        "example": "Lake Tahoe is famous for its pellucid water.",
         "synonyms": ["limpid", "translucent", "crystalline"]
       }
     ]
@@ -5712,7 +5712,7 @@
       {
         "part_of_speech": "adjective",
         "definition": "not profound or thorough",
-        "example": null,
+        "example": "Sarah gave the car merely a superficial cleaning.",
         "synonyms": ["cursory", "desultory", "perfunctory"]
       }
     ]
@@ -5815,9 +5815,9 @@
       },
       {
         "part_of_speech": "verb",
-        "definition": "fraternize",
-        "example": null,
-        "synonyms": []
+        "definition": "cooperate deviously with an enemy",
+        "example": "In War for the Planet of the Apes, some of the gorillas collaborated with the humans.",
+        "synonyms": ["fraternize", "conspire", "collude"]
       }
     ]
   },
@@ -6706,7 +6706,7 @@
       {
         "part_of_speech": "verb",
         "definition": "deflect from giving a clear answer",
-        "example": null,
+        "example": "He was a master at evading uncomfortable questions.",
         "synonyms": ["hedge", "be evasive about", "be equivocal about"]
       }
     ]
@@ -6908,7 +6908,7 @@
       {
         "part_of_speech": "verb",
         "definition": "improve in accuracy or excellence",
-        "example": null,
+        "example": "She refined her skills by practicing daily.",
         "synonyms": ["revise", "fine-tune", "hone"]
       }
     ]
@@ -8252,7 +8252,7 @@
       {
         "part_of_speech": "adjective",
         "definition": "of primary importance; major",
-        "example": null,
+        "example": "Her prime worry is that we're overbudget.",
         "synonyms": ["chief", "key", "principal"]
       }
     ]
@@ -8772,7 +8772,7 @@
       {
         "part_of_speech": "adjective",
         "definition": "very bad; awful",
-        "example": null,
+        "example": "His performance in the play, I'm sorry to say, was woeful.",
         "synonyms": ["dreadful", "atrocious", "deplorable"]
       }
     ]
@@ -8857,7 +8857,7 @@
         "part_of_speech": "adjective",
         "definition": "purgative",
         "example": "Watching a sad movie can be a cathartic experience for some.",
-        "synonyms": []
+        "synonyms": ["purgative", "purifying", "exorcising"]
       }
     ]
   },
@@ -8975,7 +8975,7 @@
         "part_of_speech": "noun",
         "definition": "resilience",
         "example": "He showed remarkable fortitude during tough times.",
-        "synonyms": []
+        "synonyms": ["resilience", "mettle", "steadfastness"]
       }
     ]
   },
@@ -9128,13 +9128,13 @@
       {
         "part_of_speech": "verb",
         "definition": "make or provide",
-        "example": null,
+        "example": "One must receive payment for services they render.",
         "synonyms": ["furnish", "proffer", "supply"]
       },
       {
         "part_of_speech": "verb",
         "definition": "(in a courtroom) deliver a verdict",
-        "example": null,
+        "example": "The verdict rendered him guilty.",
         "synonyms": ["hand down", "announce", "proclaim"]
       }
     ]
@@ -9163,7 +9163,7 @@
         "part_of_speech": "adjective",
         "definition": "hardy",
         "example": "The city is resilient, bouncing back after every challenge.",
-        "synonyms": []
+        "synonyms": ["hardy", "buoyant", "irrepressible"]
       }
     ]
   },
@@ -9294,7 +9294,7 @@
       {
         "part_of_speech": "verb",
         "definition": "making something sound or look better than it is in reality",
-        "example": null,
+        "example": "John has a terrible habit of embellishing his stories with improbable details.",
         "synonyms": ["exaggerate", "embroider", "color"]
       }
     ]
@@ -9866,7 +9866,7 @@
       {
         "part_of_speech": "noun",
         "definition": "a brief pause or delay in activity",
-        "example": null,
+        "example": "There was usually a lull between each class period.",
         "synonyms": ["respite", "hiatus", "interlude"]
       }
     ]
@@ -10723,7 +10723,7 @@
       {
         "part_of_speech": "noun",
         "definition": "a long angry rant",
-        "example": null,
+        "example": "The politician delivered a passionate harangue to his supporters.",
         "synonyms": ["diatribe", "tirade", "broadside"]
       }
     ]
@@ -10793,7 +10793,7 @@
       {
         "part_of_speech": "verb",
         "definition": "abandon a harsh intention or attitude by giving in",
-        "example": null,
+        "example": "The stubborn child finally relented and agreed to do his chores.",
         "synonyms": ["yield", "capitulate", "accede"]
       },
       {
@@ -10911,7 +10911,7 @@
       {
         "part_of_speech": "adjective",
         "definition": "playful or silly",
-        "example": null,
+        "example": "The whimsical decorations added a touch of playfulness to the room.",
         "synonyms": ["fanciful", "quirky", "waggish"]
       },
       {
@@ -11601,7 +11601,7 @@
       {
         "part_of_speech": "noun",
         "definition": "one who has behaved badly, or illegally",
-        "example": null,
+        "example": "The security caught the miscreant trying to steal.",
         "synonyms": ["culprit", "malefactor", "delinquent"]
       }
     ]
@@ -12775,7 +12775,7 @@
       {
         "part_of_speech": "adjective",
         "definition": "(of farmland) not cultivated; barren",
-        "example": null,
+        "example": "The farmland lay fallow, awaiting next season's crops.",
         "synonyms": ["untilled", "unsown", "unplowed"]
       },
       {
@@ -12871,7 +12871,7 @@
       {
         "part_of_speech": "verb",
         "definition": "provoke interest in",
-        "example": null,
+        "example": "Books use salacious titles to intrigue readers.",
         "synonyms": ["tempt", "tantalize", "lure"]
       }
     ]
@@ -12891,7 +12891,7 @@
       {
         "part_of_speech": "adjective",
         "definition": "insubstantial; insignificant",
-        "example": null,
+        "example": "Julie's parents provided her with only a nominal allowance.",
         "synonyms": ["minute", "token", "trifling"]
       }
     ]
@@ -12995,7 +12995,7 @@
       {
         "part_of_speech": "adjective",
         "definition": "without care; neglectful",
-        "example": null,
+        "example": "Alcohol consumption made his speech slovenly.",
         "synonyms": ["slapdash", "slipshod", "haphazard"]
       }
     ]
