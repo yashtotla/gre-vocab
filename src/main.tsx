@@ -1,6 +1,8 @@
 import { StrictMode } from 'react'
 import ReactDOM from 'react-dom/client'
 import { RouterProvider, createRouter } from '@tanstack/react-router'
+import { injectSpeedInsights } from '@vercel/speed-insights'
+import { inject } from '@vercel/analytics'
 
 import * as TanstackQuery from './integrations/tanstack-query/root-provider'
 
@@ -28,6 +30,10 @@ declare module '@tanstack/react-router' {
     router: typeof router
   }
 }
+
+// Initialize Vercel Analytics and Speed Insights
+inject()
+injectSpeedInsights()
 
 // Render the app
 const rootElement = document.getElementById('app')
