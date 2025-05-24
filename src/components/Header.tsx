@@ -1,4 +1,5 @@
 import { Link } from '@tanstack/react-router'
+import { Search } from './Search'
 import {
   NavigationMenu,
   NavigationMenuItem,
@@ -46,7 +47,9 @@ export default function Header() {
           </NavigationMenuList>
         </NavigationMenu>
       </div>
-      <div className="mr-4" style={{ minWidth: 48 }} />
+      <div className="mr-4" style={{ minWidth: 48 }}>
+        <Search />
+      </div>
     </header>
   )
 }
