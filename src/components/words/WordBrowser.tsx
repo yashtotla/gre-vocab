@@ -1,11 +1,11 @@
 import { useMemo, useState } from 'react'
-import { useQuery } from '@tanstack/react-query'
 import Fuse from 'fuse.js'
 import { WordCard } from './WordCard'
 import { useDebounce } from '@/hooks/useDebounce'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import { useWordGroups } from '@/hooks/useWordGroups'
 
 interface Word {
   word: string
@@ -20,42 +20,13 @@ interface Word {
   }>
 }
 
-interface WordGroup {
-  group: number
-  words: Array<Word>
-}
-
 export function WordBrowser() {
   const [selectedGroup, setSelectedGroup] = useState<number | null>(null)
   const [selectedWord, setSelectedWord] = useState<Word | null>(null)
   const [search, setSearch] = useState('')
   const debouncedSearch = useDebounce(search, 300)
 
-  const { data: wordGroups, isLoading } = useQuery<Array<WordGroup>>({
-    queryKey: ['wordGroups'],
-    queryFn: async () => {
-      const response = await fetch('/data/vocab.json')
-      const words: Array<Word> = await response.json()
-      
-      // Group words by their group number
-      const groups = words.reduce((acc: { [key: number]: Array<Word> }, word) => {
-        const groupWords = acc[word.group] ?? []
-        acc[word.group] = [...groupWords, word]
-        return acc
-      }, {})
-
-      // Convert to array and sort by group number
-      return Object.entries(groups)
-        .map(([group, groupWords]) => ({
-          group: parseInt(group),
-          words: groupWords.sort((a, b) => a.word.localeCompare(b.word))
-        }))
-        .sort((a, b) => a.group - b.group)
-    }
-  })
-
-  // Flatten all words for global search
-  const allWords = useMemo(() => wordGroups?.flatMap(g => g.words) ?? [], [wordGroups])
+  const { wordGroups, isLoading, allWords } = useWordGroups()
 
   // Fuse.js setup
   const fuse = useMemo(() =>

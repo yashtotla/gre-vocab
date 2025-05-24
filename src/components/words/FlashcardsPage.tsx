@@ -1,9 +1,9 @@
 import { useEffect, useMemo, useState } from 'react'
-import { useQuery } from '@tanstack/react-query'
 import { Flashcard } from './Flashcard'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Switch } from '@/components/ui/switch'
+import { useWordGroups } from '@/hooks/useWordGroups'
 
 function shuffleArray<T>(array: Array<T>): Array<T> {
   const arr = [...array]
@@ -15,37 +15,17 @@ function shuffleArray<T>(array: Array<T>): Array<T> {
 }
 
 export function FlashcardsPage() {
-  const { data: wordGroups, isLoading } = useQuery({
-    queryKey: ['wordGroups'],
-    queryFn: async () => {
-      const response = await fetch('/data/vocab.json')
-      const words = await response.json()
-      const groups = words.reduce((acc: { [key: number]: Array<any> | undefined }, word: any) => {
-        if (!acc[word.group]) acc[word.group] = [];
-        acc[word.group]!.push(word);
-        return acc;
-      }, {})
-      return Object.entries(groups)
-        .map(([group, groupWords]) => ({
-          group: parseInt(group),
-          words: (groupWords as Array<any>).sort((a, b) => a.word.localeCompare(b.word))
-        }))
-        .sort((a, b) => a.group - b.group)
-    }
-  })
-
   const [selectedGroup, setSelectedGroup] = useState<number | null>(null)
   const [currentIdx, setCurrentIdx] = useState(0)
   const [flipped, setFlipped] = useState(false)
   const [shuffle, setShuffle] = useState(false)
 
+  const { wordGroups, isLoading, selectedWords } = useWordGroups(selectedGroup ? [selectedGroup] : undefined)
+
   // Get words for the selected group, shuffled if needed
   const groupWords = useMemo(() => {
-    const words = selectedGroup
-      ? wordGroups?.find(g => g.group === selectedGroup)?.words ?? []
-      : []
-    return shuffle ? shuffleArray(words) : words
-  }, [selectedGroup, wordGroups, shuffle])
+    return shuffle ? shuffleArray(selectedWords) : selectedWords
+  }, [selectedWords, shuffle])
 
   // Navigation handlers
   const goNext = () => {

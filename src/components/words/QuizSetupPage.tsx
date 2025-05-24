@@ -1,17 +1,26 @@
 import { useState, useEffect } from 'react'
-import { useQuery } from '@tanstack/react-query'
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Checkbox } from '@/components/ui/checkbox'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { QuizPage } from './QuizPage'
+import { useWordGroups } from '@/hooks/useWordGroups'
 
 const QUIZ_TYPES = [
   { value: 'synonym', label: 'Synonym Matching' },
   { value: 'definition', label: 'Pick the Correct Definition' },
   { value: 'reverse', label: 'Pick the Correct Word for a Definition' },
 ]
+
+interface Word {
+  word: string
+  definitions: Array<{
+    definition: string
+    example: string | null
+    synonyms: string[]
+  }>
+}
 
 function getRandomElements<T>(arr: T[], n: number): T[] {
   const shuffled = [...arr]
@@ -23,29 +32,12 @@ function getRandomElements<T>(arr: T[], n: number): T[] {
 }
 
 export function QuizSetupPage() {
-  const { data: wordGroups, isLoading } = useQuery({
-    queryKey: ['wordGroups'],
-    queryFn: async () => {
-      const response = await fetch('/data/vocab.json')
-      const words = await response.json()
-      const groups = words.reduce((acc: { [key: number]: Array<any> | undefined }, word: any) => {
-        if (!acc[word.group]) acc[word.group] = [];
-        acc[word.group]!.push(word);
-        return acc;
-      }, {})
-      return Object.entries(groups)
-        .map(([group, groupWords]) => ({
-          group: parseInt(group),
-          words: (groupWords as Array<any>).sort((a, b) => a.word.localeCompare(b.word))
-        }))
-        .sort((a, b) => a.group - b.group)
-    }
-  })
-
   const [selectedGroups, setSelectedGroups] = useState<number[]>([])
   const [numWordsInput, setNumWordsInput] = useState('')
   const [quizType, setQuizType] = useState(QUIZ_TYPES[0].value)
   const [quizQuestions, setQuizQuestions] = useState<any[] | null>(null)
+
+  const { wordGroups, isLoading, selectedWords, allWords } = useWordGroups(selectedGroups)
 
   // Calculate max words for selected groups
   const maxWords = selectedGroups.length > 0
@@ -88,20 +80,17 @@ export function QuizSetupPage() {
 
   // Generate quiz questions for all quiz types
   const generateQuizQuestions = (type: string) => {
-    if (!wordGroups) return []
-    const allWords = wordGroups
-      .filter(g => selectedGroups.includes(g.group))
-      .flatMap(g => g.words)
-    const selectedWords = getRandomElements(allWords, Math.min(parseInt(numWordsInput), allWords.length))
+    if (!selectedWords.length) return []
+    const quizWords = getRandomElements(selectedWords, Math.min(parseInt(numWordsInput), selectedWords.length))
 
     if (type === 'reverse') {
       // Pick the correct word for a definition
-      return selectedWords.map(word => {
+      return quizWords.map((word: Word) => {
         // Pick 3 distractors
         const distractors = getRandomElements(
-          allWords.filter(w => w.word !== word.word),
+          allWords.filter((w: Word) => w.word !== word.word),
           3
-        ).map(w => w.word)
+        ).map((w: Word) => w.word)
         // Use the first definition as the prompt
         const def = word.definitions[0]
         return {
@@ -113,13 +102,13 @@ export function QuizSetupPage() {
       })
     } else if (type === 'definition') {
       // Pick the correct definition for a word
-      return selectedWords.map(word => {
+      return quizWords.map((word: Word) => {
         const def = word.definitions[0]
         // Pick 3 distractor definitions
         const distractors = getRandomElements(
-          allWords.filter(w => w.word !== word.word && w.definitions.length > 0),
+          allWords.filter((w: Word) => w.word !== word.word && w.definitions.length > 0),
           3
-        ).map(w => w.definitions[0].definition)
+        ).map((w: Word) => w.definitions[0].definition)
         return {
           prompt: word.word,
           options: getRandomElements([def.definition, ...distractors], 4),
@@ -129,11 +118,11 @@ export function QuizSetupPage() {
       })
     } else if (type === 'synonym') {
       // Synonym matching: prompt is a word, options are synonyms (with distractors)
-      return selectedWords.map(word => {
+      return quizWords.map((word: Word) => {
         // Get all synonyms from all words
-        const allSynonyms = allWords.flatMap(w => w.definitions.flatMap((d: any) => d.synonyms || []))
+        const allSynonyms = allWords.flatMap((w: Word) => w.definitions.flatMap(d => d.synonyms || []))
         // Get synonyms for this word (from all its definitions)
-        const wordSynonyms = word.definitions.flatMap((d: any) => d.synonyms || [])
+        const wordSynonyms = word.definitions.flatMap(d => d.synonyms || [])
         // If no synonyms, skip this question
         if (wordSynonyms.length === 0) {
           return null

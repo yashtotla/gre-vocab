@@ -1,10 +1,10 @@
 import { useState } from 'react'
-import { useQuery } from '@tanstack/react-query'
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { Check } from 'lucide-react'
 import { Checkbox } from '@/components/ui/checkbox'
+import { useWordGroups } from '@/hooks/useWordGroups'
 
 function getGridPairCount(gridSize: string) {
   const [rows, cols] = gridSize.split('x').map(Number)
@@ -59,26 +59,10 @@ export default function MatchingGamePage() {
   const [bestStreak, setBestStreak] = useState(0)
   const [incorrectAttempts, setIncorrectAttempts] = useState<{ pair: [string, string], count: number }[]>([])
 
-  const { data: words, isLoading } = useQuery({
-    queryKey: ['vocab'],
-    queryFn: async () => {
-      const res = await fetch('/data/vocab.json')
-      return res.json()
-    },
-  })
-
   // Group selection state
   const [selectedGroups, setSelectedGroups] = useState<number[]>([])
 
-  // Get available groups from vocab data
-  const groupOptions: number[] = words
-    ? Array.from(new Set(words.map((w: any) => w.group))).map(Number).sort((a, b) => a - b)
-    : []
-
-  // Only use words from selected groups
-  const filteredWords = words && selectedGroups.length > 0
-    ? words.filter((w: any) => selectedGroups.includes(w.group))
-    : []
+  const { wordGroups, isLoading, selectedWords, allWords } = useWordGroups(selectedGroups)
 
   const handleGroupChange = (group: number, checked: boolean) => {
     setSelectedGroups(prev =>
@@ -87,9 +71,9 @@ export default function MatchingGamePage() {
   }
 
   const handleStart = () => {
-    if (!filteredWords.length) return
+    if (!selectedWords.length) return
     const pairCount = getGridPairCount(gridSize)
-    const pairs = generateSynonymPairs(filteredWords, pairCount, words)
+    const pairs = generateSynonymPairs(selectedWords, pairCount, allWords)
     const tileObjs = shuffle(
       pairs.flatMap(([a, b]) => [
         { word: a, pair: b },
@@ -171,7 +155,7 @@ export default function MatchingGamePage() {
             <div>
               <div className="font-semibold mb-2">Select Groups</div>
               <div className="flex flex-wrap gap-2">
-                {groupOptions.map((group: number) => (
+                {wordGroups?.map(({ group }) => (
                   <label key={group} className="flex items-center gap-2 cursor-pointer">
                     <Checkbox
                       checked={selectedGroups.includes(group)}
