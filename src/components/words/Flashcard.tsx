@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react'
+import { useRef } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 
 interface FlashcardProps {
@@ -19,18 +19,6 @@ interface FlashcardProps {
 
 export function Flashcard({ word, flipped, onFlip }: FlashcardProps) {
   const cardRef = useRef<HTMLDivElement>(null)
-
-  // Flip on spacebar
-  useEffect(() => {
-    const handler = (e: KeyboardEvent) => {
-      if (e.code === 'Space') {
-        e.preventDefault()
-        onFlip()
-      }
-    }
-    window.addEventListener('keydown', handler)
-    return () => window.removeEventListener('keydown', handler)
-  }, [onFlip])
 
   return (
     <div

@@ -18,7 +18,7 @@ interface WordGroup {
   words: Array<Word>
 }
 
-export function useWordGroups(selectedGroups?: number[]) {
+export function useWordGroups(selectedGroups?: Array<number>) {
   const { data: wordGroups, isLoading } = useQuery<Array<WordGroup>>({
     queryKey: ['wordGroups'],
     queryFn: async () => {

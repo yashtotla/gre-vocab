@@ -19,13 +19,16 @@ export function FlashcardsPage() {
   const [currentIdx, setCurrentIdx] = useState(0)
   const [flipped, setFlipped] = useState(false)
   const [shuffle, setShuffle] = useState(false)
-
-  const { wordGroups, isLoading, selectedWords } = useWordGroups(selectedGroup ? [selectedGroup] : undefined)
+  
+  const { wordGroups, isLoading } = useWordGroups();
 
   // Get words for the selected group, shuffled if needed
   const groupWords = useMemo(() => {
-    return shuffle ? shuffleArray(selectedWords) : selectedWords
-  }, [selectedWords, shuffle])
+    const words = selectedGroup
+      ? wordGroups?.find(g => g.group === selectedGroup)?.words ?? []
+      : []
+    return shuffle ? shuffleArray(words) : words
+  }, [selectedGroup, wordGroups, shuffle])
 
   // Navigation handlers
   const goNext = () => {
@@ -47,6 +50,7 @@ export function FlashcardsPage() {
   // Keyboard navigation: left/right for prev/next, space/enter for flip
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
+      e.preventDefault();
       if (e.code === 'ArrowRight') {
         goNext();
       } else if (e.code === 'ArrowLeft') {
